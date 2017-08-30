@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <input type="button" id="btn" value="按钮">
+        <script>
+
+
+            class DragBox{
+               newDivInit(dragBox){
+                   this.dragBox =dragBox;
+                   this.dragBox.onmousedown =this.downFn.bind(this)
+               }
+               downFn(ev){    
+                    this.disX =ev.clientX -this.dragBox.offsetLeft;
+                    this.disY =ev.clientY -this.dragBox.offsetTop;
+                    document.onmousemove =this.moveFn.bind(this)
+                    document.onmouseup =this.upFn;
+               }
+               moveFn(ev){
+                    this.dragBox.style.left = ev.clientX-this.disX +"px";
+                    this.dragBox.style.top = ev.clientY-this.disY +"px";
+               }
+               upFn(){
+                   document.onmousemove =document.onmouseup=null
+               }
+            }
+
+
+            class CreateDiv extends DragBox{
+                constructor(opations){
+                    super();
+                    this.newStyle ={    //这是默认样式
+                        width:100,
+                        height:100,
+                        background:"yellow"
+                    }
+                    Object.assign(this.newStyle,opations)  //用参数中的数据覆盖默认样式
+                    this.init()
+                }
+
+               init(){
+                  this.newDiv =this.createNewDiv();
+                  this.divStyle()
+                  document.body.appendChild(this.newDiv)
+               }
+               createNewDiv(){
+                    let newDiv =document.createElement("div");
+                    return newDiv;
+               }
+               divStyle(){
+                   this.newDiv.style.cssText =`
+                     width:${this.newStyle.width}px;
+                     height:${this.newStyle.height}px;
+                     background:${this.newStyle.background};
+                     position:absolute;
+                     top:0;
+                     left:0;
+                   `
+               }
+
+            }
+            btn.onclick= function(){
+                let c= new CreateDiv({
+                     width:200,
+                     height:300,
+                    background:"blue"
+                 })
+               
+                 c.newDivInit(c.newDiv)
+            }
+
+            
+           
+        </script>
+    </body>
+</html>
